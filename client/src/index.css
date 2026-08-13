@@ -1,0 +1,1574 @@
+/* ============================================================
+   src/index.css — Global Design System
+   ============================================================
+   This file is the ONLY CSS imported in main.jsx.
+   It defines everything the app needs to look polished:
+
+   1. CSS Custom Properties (design tokens) — colours, spacing, etc.
+   2. Base reset & typography
+   3. Navbar
+   4. Page layout & hero section
+   5. Buttons
+   6. Placeholder notice card
+   7. Utility classes
+   ============================================================ */
+
+/* ── 1. Design Tokens (CSS Custom Properties) ──────────────────
+   Custom properties (variables) start with --
+   Change these values here to retheme the entire app at once.
+   ──────────────────────────────────────────────────────────── */
+:root {
+  /* Colours */
+  --color-bg:           #0d0d1a;   /* deep navy-black page background  */
+  --color-surface:      #13132a;   /* slightly lighter — card/nav bg   */
+  --color-surface-2:    #1c1c3a;   /* even lighter — hover states       */
+  --color-border:       #2a2a50;   /* subtle divider lines              */
+
+  --color-primary:      #7c6ff7;   /* violet — buttons, links, accents  */
+  --color-primary-dark: #6457e8;   /* darker violet for hover states    */
+  --color-primary-glow: rgba(124, 111, 247, 0.25); /* glow effect      */
+
+  --color-success:      #10b981;   /* emerald — open badges, connected  */
+  --color-danger:       #ef4444;   /* red — closed badges, errors       */
+  --color-warning:      #f59e0b;   /* amber — expiry warnings           */
+
+  --color-text:         #e2e8f0;   /* primary text                      */
+  --color-text-muted:   #94a3b8;   /* secondary / placeholder text      */
+  --color-text-faint:   #4a5568;   /* very subtle labels                */
+
+  /* Spacing */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+
+  /* Layout */
+  --navbar-height: 64px;
+  --content-max-width: 900px;
+
+  /* Typography */
+  --font-base: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Code', 'Fira Code', monospace;
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 20px var(--color-primary-glow);
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* ── 2. Base Reset & Typography ────────────────────────────────
+   A modern CSS reset that makes browsers behave consistently.
+   ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-surface-2);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+/* ── 3. Navbar ─────────────────────────────────────────────────
+   Fixed to the top of the viewport. Contains brand + links.
+   ──────────────────────────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+
+  height: var(--navbar-height);
+  padding: 0 var(--space-xl);
+
+  background: rgba(13, 13, 26, 0.85);
+  border-bottom: 1px solid var(--color-border);
+
+  /* Glassmorphism: blurs whatever is behind the navbar */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Brand / Logo */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  text-decoration: none;
+  margin-right: auto; /* pushes nav links to the right */
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a78bfa, #7c6ff7, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+/* Navigation links */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.nav-link {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  text-decoration: none;
+}
+
+.nav-link--active {
+  color: var(--color-primary);
+  background: rgba(124, 111, 247, 0.12);
+}
+
+.nav-link--create {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.nav-link--create:hover {
+  background: var(--color-primary-dark);
+  color: #fff;
+}
+
+.nav-link--create.nav-link--active {
+  background: var(--color-primary-dark);
+  color: #fff;
+}
+
+/* Connection indicator dot */
+.connection-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: var(--space-sm);
+  transition: background-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.connection-dot--on {
+  background: var(--color-success);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.connection-dot--off {
+  background: var(--color-danger);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+/* ── 4. Page Layout & Hero ──────────────────────────────────────
+   The <main> element inside each page component.
+   Sits below the fixed navbar.
+   ──────────────────────────────────────────────────────────── */
+.page {
+  flex: 1;
+  padding-top: calc(var(--navbar-height) + var(--space-xl));
+  padding-bottom: var(--space-2xl);
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Browse page overrides .page padding-top — .browse-header
+   manages its own spacing to allow a tighter layout */
+.page--browse {
+  padding-top: 0;
+}
+
+/* Hero section — centred, appears at top of each page */
+.page-hero {
+  text-align: center;
+  padding: var(--space-2xl) 0 var(--space-xl);
+}
+
+.page-hero__icon {
+  font-size: 3.5rem;
+  margin-bottom: var(--space-md);
+  line-height: 1;
+}
+
+.page-hero__title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.03em;
+}
+
+.page-hero__subtitle {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  max-width: 520px;
+  margin: 0 auto var(--space-lg);
+  line-height: 1.7;
+}
+
+/* ── 5. Buttons ────────────────────────────────────────────────
+   Reusable button classes. Apply to <button> or <Link>.
+   ──────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 0.65rem 1.4rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+/* Primary button — violet, used for main CTAs */
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(124, 111, 247, 0.35);
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-glow);
+  color: #fff;
+}
+
+/* Ghost button — transparent with a border */
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+/* Danger button — red, for close/delete actions */
+.btn--danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.btn--danger:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ── 6. Placeholder Notice Card ────────────────────────────────
+   Shown on placeholder pages during construction.
+   ──────────────────────────────────────────────────────────── */
+.placeholder-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-xl);
+  margin-top: var(--space-xl);
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.placeholder-notice__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+
+.placeholder-notice strong {
+  color: var(--color-text);
+}
+
+/* ── 7. Responsive adjustments ─────────────────────────────────
+   Mobile-first breakpoints.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 var(--space-md);
+  }
+
+  .brand-name {
+    font-size: 1.1rem;
+  }
+
+  .nav-link--create {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.82rem;
+  }
+
+  .page {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+}
+
+/* ============================================================
+   PHASE 6 — Create Poll Form
+   ============================================================ */
+
+/* ── Form card wrapper ─────────────────────────────────────── */
+.form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-2xl);
+  max-width: 640px;
+  margin: 0 auto var(--space-2xl);
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 600px) {
+  .form-card {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
+
+/* ── Form group (label + input pair) ──────────────────────── */
+.form-group {
+  margin-bottom: var(--space-xl);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.01em;
+}
+
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.form-required {
+  color: var(--color-danger);
+  margin-left: 0.2em;
+}
+
+.form-optional {
+  color: var(--color-text-faint);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.form-count {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.form-hint {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+  margin-top: var(--space-xs);
+}
+
+.form-hint--center {
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+/* ── Text inputs and textareas ─────────────────────────────── */
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  line-height: 1.5;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-faint);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.form-input:disabled,
+.form-textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* datetime-local input — needs explicit text colour */
+.form-input--datetime {
+  color-scheme: dark;
+}
+
+/* ── Options list ──────────────────────────────────────────── */
+.options-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+/* One option row: badge + input + remove button */
+.option-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  animation: slideDown 0.18s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Numbered circle badge */
+.option-badge {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* The option text input takes all remaining space */
+.option-input {
+  flex: 1;
+}
+
+/* Remove (×) button */
+.btn-remove-option {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), color var(--transition-fast),
+              border-color var(--transition-fast);
+}
+
+.btn-remove-option:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btn-remove-option:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* "+ Add Option" dashed button */
+.btn-add-option {
+  width: 100%;
+  padding: 0.55rem;
+  background: transparent;
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+              background var(--transition-fast);
+  margin-top: var(--space-sm);
+}
+
+.btn-add-option:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(124, 111, 247, 0.06);
+}
+
+.btn-add-option:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Error alert ───────────────────────────────────────────── */
+.error-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  color: #fca5a5;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+.error-alert__icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  margin-top: 0.1rem;
+}
+
+/* ── Form action row (Cancel + Submit) ─────────────────────── */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 480px) {
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: var(--space-sm);
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Loading spinner (used in the submit button) */
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   PHASE 7 — Browse Polls / Home Page
+   ============================================================ */
+
+/* ── Page header row ───────────────────────────────────────── */
+.browse-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-top: calc(var(--navbar-height) + var(--space-xl));
+  padding-bottom: var(--space-lg);
+}
+
+.browse-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-xs);
+}
+
+.browse-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+/* Move the "Create Poll" btn inline with the title on desktop */
+.browse-create-btn {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+@media (max-width: 560px) {
+  .browse-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: calc(var(--navbar-height) + var(--space-lg));
+  }
+
+  .browse-create-btn {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+/* ── Controls bar (search + filter tabs) ──────────────────── */
+.browse-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+/* Search box */
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box__icon {
+  position: absolute;
+  left: 0.8rem;
+  font-size: 0.95rem;
+  pointer-events: none;
+  color: var(--color-text-faint);
+}
+
+.search-box__input {
+  width: 100%;
+  padding: 0.6rem 2.5rem 0.6rem 2.4rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.search-box__input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.search-box__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+/* Clear (✕) button inside search box */
+.search-box__clear {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0.2rem;
+  border-radius: 50%;
+  line-height: 1;
+  transition: color var(--transition-fast);
+}
+
+.search-box__clear:hover {
+  color: var(--color-text);
+}
+
+/* Status filter tabs */
+.filter-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.filter-tab {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast),
+              border-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.filter-tab:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.filter-tab--active {
+  background: rgba(124, 111, 247, 0.15);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ── Result count line ─────────────────────────────────────── */
+.browse-count {
+  font-size: 0.83rem;
+  color: var(--color-text-faint);
+  margin-bottom: var(--space-md);
+}
+
+/* ── Poll grid ─────────────────────────────────────────────── */
+.poll-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}
+
+@media (max-width: 480px) {
+  .poll-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Poll card ─────────────────────────────────────────────── */
+.poll-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal),
+              border-color var(--transition-normal);
+}
+
+.poll-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(124, 111, 247, 0.4);
+}
+
+/* Badge row (status + expiry) */
+.poll-card__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* Open / Closed status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.status-badge--open {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.status-badge--closed {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.status-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-badge--open .status-badge__dot {
+  background: var(--color-success);
+  /* Subtle pulse so open polls look "live" */
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-badge--closed .status-badge__dot {
+  background: var(--color-danger);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.4; }
+}
+
+/* Expiry chip */
+.expiry-chip {
+  font-size: 0.75rem;
+  color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-pill);
+  padding: 0.18rem 0.55rem;
+}
+
+/* Poll question */
+.poll-card__question {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--color-text);
+  /* Clamp to 3 lines so cards stay uniform height */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Stats row */
+.poll-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: auto; /* push stats toward the bottom of the card */
+}
+
+.poll-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.poll-stat__icon {
+  font-size: 0.85rem;
+}
+
+/* Footer with View Poll button */
+.poll-card__footer {
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.poll-card__btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Feedback states (loading / error / empty) ─────────────── */
+.browse-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.browse-feedback--error {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.browse-feedback__icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+/* Spinner variant used inside the browse loading state */
+.browse-spinner {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+  border-color: var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+/* ============================================================
+   PHASE 8 — Poll Detail + Voting UI
+   ============================================================ */
+
+/* ── Small button variant ──────────────────────────────────── */
+.btn--sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+}
+
+/* "Copied!" success variant — momentary green state */
+.btn--success {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.btn--success:hover {
+  background: #059669;
+  color: #fff;
+}
+
+/* Small spinner variant (fits inside buttons) */
+.spinner--sm {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* ── Back navigation row ───────────────────────────────────── */
+.poll-detail__back {
+  padding-top: var(--navbar-height);
+  padding-bottom: var(--space-lg);
+}
+
+/* ── Poll header card ──────────────────────────────────────── */
+.poll-detail__header {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-2xl);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 600px) {
+  .poll-detail__header {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
+
+/* Badge row (status + expiry) */
+.poll-detail__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+
+/* Poll question — large and prominent */
+.poll-detail__question {
+  font-size: clamp(1.25rem, 3vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+}
+
+/* Stats row: "4 options · 12 votes · Created Aug 13, 2026" */
+.poll-detail__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.poll-meta__dot {
+  color: var(--color-text-faint);
+}
+
+/* ── Expired expiry chip variant ───────────────────────────── */
+.expiry-chip--expired {
+  color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* ── Closed / expired status banner ───────────────────────── */
+.poll-status-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  color: #fca5a5;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: var(--space-lg);
+}
+
+.poll-status-banner--expired {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+  color: #fcd34d;
+}
+
+/* ── Vote success banner ───────────────────────────────────── */
+.vote-success-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  color: #6ee7b7;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: var(--space-lg);
+}
+
+/* Error alert dismiss button */
+.error-alert__dismiss {
+  background: none;
+  border: none;
+  color: #fca5a5;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: auto;
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.error-alert__dismiss:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* ── Options section ───────────────────────────────────────── */
+.poll-options-section {
+  margin-bottom: var(--space-xl);
+}
+
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ── Individual poll option ────────────────────────────────── */
+.poll-option {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  transition:
+    border-color var(--transition-normal),
+    background   var(--transition-normal),
+    box-shadow   var(--transition-normal);
+}
+
+/* Highlight the option the user voted for */
+.poll-option--voted {
+  border-color: rgba(124, 111, 247, 0.5);
+  background: rgba(124, 111, 247, 0.06);
+  box-shadow: 0 0 0 1px rgba(124, 111, 247, 0.2);
+}
+
+/* Subtle highlight for the leading option */
+.poll-option--leader {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+/* Header row: option text + "Your vote" badge + Vote button */
+.poll-option__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  min-height: 2rem;
+}
+
+.poll-option__text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* "✓ Your vote" pill badge */
+.your-vote-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.6rem;
+  background: rgba(124, 111, 247, 0.15);
+  border: 1px solid rgba(124, 111, 247, 0.35);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Vote button inside the option row */
+.option-vote-btn {
+  flex-shrink: 0;
+  min-width: 64px;
+}
+
+/* ── Progress bar ──────────────────────────────────────────── */
+.option-bar-wrap {
+  height: 8px;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-bottom: var(--space-xs);
+}
+
+.option-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  /* Smooth animation when percentage changes (e.g. after a vote) */
+  transition: width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 0%;
+}
+
+/* Slightly brighter / different colour for the leading option */
+.option-bar-fill--leader {
+  background: var(--color-success);
+}
+
+/* ── Option stats row ──────────────────────────────────────── */
+.option-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.option-stats__count {
+  /* left-aligned count */
+}
+
+.option-stats__pct {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 0.85rem;
+}
+
+/* ── Creator: Close Poll section ───────────────────────────── */
+.close-poll-section {
+  background: var(--color-surface);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Confirmation dialog inside the close section */
+.confirm-close__message {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.confirm-close__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* ── Share section ─────────────────────────────────────────── */
+.share-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.share-section__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.share-url-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Read-only URL input */
+.share-url-input {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.share-url-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.share-copy-btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .share-url-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .share-copy-btn {
+    justify-content: center;
+  }
+
+  .confirm-close__actions {
+    flex-direction: column;
+  }
+
+  .confirm-close__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   PHASE 9 — Polish, Accessibility & Responsive Hardening
+   ============================================================ */
+
+/* ── Keyboard focus ring ───────────────────────────────────────
+   Replaces the browser's default focus outline with a polished
+   violet ring that matches the LivePoll colour scheme.
+   :focus-visible only activates for keyboard navigation (not mouse
+   clicks), so it doesn't clutter the UI for mouse users.
+   ──────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Make sure buttons inside forms also get the ring */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* ── Poll option hover state (while voting is available) ───────
+   Gives a subtle lift to each option row when the cursor hovers
+   and voting buttons are showing — makes the UI feel interactive.
+   ──────────────────────────────────────────────────────────── */
+.poll-option:hover {
+  border-color: rgba(124, 111, 247, 0.3);
+  background: rgba(124, 111, 247, 0.03);
+}
+
+/* Don't add hover effect on voted/closed options */
+.poll-option--voted:hover {
+  border-color: rgba(124, 111, 247, 0.5);
+  background: rgba(124, 111, 247, 0.06);
+}
+
+/* ── Minimum touch target size ─────────────────────────────────
+   WCAG 2.1 recommends interactive targets be at least 44×44px.
+   Buttons already meet this; these rules cover the edge cases.
+   ──────────────────────────────────────────────────────────── */
+.btn {
+  min-height: 40px;
+}
+
+.btn--sm {
+  min-height: 34px;
+}
+
+.filter-tab {
+  min-height: 36px;
+}
+
+/* ── Navbar: tablet range (601px – 768px) ──────────────────────
+   On tablets the brand text can stay but the nav links need
+   tighter padding so everything fits without wrapping.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) and (min-width: 601px) {
+  .navbar {
+    padding: 0 var(--space-lg);
+  }
+
+  .nav-link {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.88rem;
+  }
+
+  .nav-link--create {
+    padding: var(--space-xs) var(--space-md);
+  }
+}
+
+/* ── Very small screens (≤380px) ───────────────────────────────
+   On very small phones the navbar would overflow without this.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 380px) {
+  .brand-name {
+    display: none; /* show only the ⚡ icon */
+  }
+
+  .nav-link--create span {
+    display: none;
+  }
+}
+
+/* ── Browse controls: wrap on small screens ────────────────────
+   The search box and filter tabs should stack vertically
+   when the viewport is too narrow to show them side-by-side.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .browse-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    min-width: unset;
+  }
+
+  .filter-tabs {
+    justify-content: stretch;
+  }
+
+  .filter-tab {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* ── Poll card: ensure footer button doesn't shrink weirdly ─── */
+@media (max-width: 360px) {
+  .poll-card {
+    padding: var(--space-md);
+  }
+
+  .poll-card__question {
+    font-size: 0.9rem;
+  }
+}
+
+/* ── Poll detail option: option header wraps on very small ───── */
+@media (max-width: 420px) {
+  .poll-option__header {
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .poll-option__text {
+    width: 100%;
+  }
+
+  .your-vote-badge,
+  .option-vote-btn {
+    align-self: flex-start;
+  }
+}
+
+/* ── Disconnected overlay banner ───────────────────────────────
+   Shows a subtle top banner below the navbar when the Socket.IO
+   connection is lost. This tells users results may be stale.
+   Used in conjunction with the connection dot in the navbar.
+   NOTE: This class is applied by adding a data-attr to the root,
+   OR by using the existing .connection-dot--off as a sibling
+   indicator. We style the dot's tooltip to inform users instead
+   of adding a full banner (which would require JS state lift).
+   The .connection-dot--off already has a visible red dot + tooltip.
+   ──────────────────────────────────────────────────────────── */
+.connection-dot--off {
+  /* Animate the red dot to draw attention when disconnected */
+  animation: offPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes offPulse {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50%       { opacity: 0.7; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
+}
+
+/* Stop animating once connected — the --on state overrides */
+.connection-dot--on {
+  animation: none;
+}
+
+/* ── Improved form-card focus indicator on fields ──────────────
+   The existing focus ring is good; make sure disabled fields are
+   clearly styled so users know they can't interact.
+   ──────────────────────────────────────────────────────────── */
+.form-input[disabled],
+.form-textarea[disabled] {
+  background: var(--color-surface-2);
+  color: var(--color-text-faint);
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* ── Browse page: result count responsive ──────────────────────
+   Avoid orphaned single character on narrow screens.
+   ──────────────────────────────────────────────────────────── */
+.browse-count {
+  line-height: 1.5;
+}
+
+/* ── Poll detail: back button and header vertical rhythm ───────
+   Add a clear visual gap between the back button and the
+   header card on all screen sizes.
+   ──────────────────────────────────────────────────────────── */
+.poll-detail__back {
+  padding-bottom: var(--space-md);
+}
+
+/* ── Share URL: ensure input doesn't overflow on mobile ────────*/
+.share-url-input {
+  min-width: 0; /* override flex default that causes overflow */
+}
+
+/* ── Transition smoothing on all interactive surfaces ──────────
+   Ensures any border-color / box-shadow changes feel instant
+   rather than lagged when focus changes.
+   ──────────────────────────────────────────────────────────── */
+.poll-option,
+.poll-card,
+.btn,
+.nav-link,
+.filter-tab {
+  will-change: transform;
+}
+
+/* ── Visually hidden utility (screen-reader only) ──────────────
+   Use <span className="sr-only"> to add text for assistive tech
+   without showing it visually.
+   ──────────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
