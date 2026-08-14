@@ -1,9 +1,8 @@
 # ⚡ LivePoll
+https://livepoll1.netlify.app/
 
 
 > A real-time anonymous polling application. Create a poll, share the link, and watch votes roll in live — no account required.
-> Live Project Link
-> https://livepoll1.netlify.app/
 
 ---
 
